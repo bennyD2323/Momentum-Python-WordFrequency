@@ -11,25 +11,36 @@ def clean_text(text):
         if char in all_letters:
             text_to_keep += char
     return text_to_keep
+    
 def print_word_freq(file):
     """Read in `file` and print out the frequency of words in that file."""
     file = open("seneca_falls.txt")
     text = file.read()
-    
-    
     line_broke = text.replace("\n", " ")
     space_fix = line_broke.replace("  ", " ")
     nodub_dash = space_fix.replace("--", " ")
     cleaned_text = clean_text(nodub_dash)
     
-    split_text = cleaned_text.split(" ")
+    split_text = cleaned_text.split()
     word_list = []
     for word in split_text:
         if not word in STOP_WORDS:
             word_list.append(word)
-        
-    print(word_list)
+    
+    alpha_words = sorted(word_list, key = str)
+    #   print(split_text)
+    word_count_list = dict()
+    for word in alpha_words:
+        if word in word_count_list:
+            word_count_list[word] += 1
+        else:
+            word_count_list[word] = 1
+    word_count_list = {key:value for key, value in word_count_list.items() if value >=1}
+    sorted_words = sorted(word_count_list.items(), key = lambda seq: seq[1], reverse=True)
 
+    
+    for key, value in sorted_words:
+        print(key.rjust(20), " | ", value, value * ("*"))
 
 if __name__ == "__main__":
     import argparse
